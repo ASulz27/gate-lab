@@ -1,4 +1,4 @@
-name: gate-test 
+name: gate-test
 on:
   pull_request:
     branches: [main]
@@ -16,9 +16,18 @@ jobs:
       - run: echo "pretend terraform plan"
       - run: test -f check.txt
 
-apply:
-  needs: plan
-  if: github.event_name == 'push'
-  runs-on: ubuntu-latest
-  steps: 
-    - run: echo "pretend deploy"
+  apply:
+    needs: plan
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "pretend terraform apply"
+
+  deploy:
+    needs: apply
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "pretend deploy"
+
